@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
 from materials.validators import YoutubeLinkValidator
 
 
-class LessonCreateSerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = '__all__'
@@ -14,9 +14,10 @@ class LessonCreateSerializer(serializers.ModelSerializer):
         ]
 
 
-class CourseCreateSerializer(serializers.ModelSerializer):
+class CourseSerializer(serializers.ModelSerializer):
     lesson_count = serializers.SerializerMethodField()
-    lessons = LessonCreateSerializer(many=True, read_only=True)
+    lessons = LessonSerializer(many=True, read_only=True)
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
@@ -28,3 +29,9 @@ class CourseCreateSerializer(serializers.ModelSerializer):
 
     def get_lesson_count(self, obj):
         return obj.lessons.count()
+
+    def get_is_subscribed(self, obj):
+        request = self.context.get('request', None)
+        if request:
+            return Subscription.objects.filter(user=request.user, course=obj).exists()
+        return False

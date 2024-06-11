@@ -2,7 +2,6 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from materials.validators import validate_youtube_link
 
 User = get_user_model()
 
@@ -35,3 +34,8 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'урок'
         verbose_name_plural = 'уроки'
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
