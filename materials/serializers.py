@@ -1,34 +1,30 @@
 from rest_framework import serializers
 from materials.models import Course, Lesson
-from materials.validators import validate_youtube_link
+from materials.validators import YoutubeLinkValidator
 
 
-class LessonSerializer(serializers.ModelSerializer):
-    link = serializers.CharField(validators=[validate_youtube_link])
-
+class LessonCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = '__all__'
         read_only_fields = ['owner']
+        validators = [
+            YoutubeLinkValidator(field='link'),
+            YoutubeLinkValidator(field='description'),
+        ]
 
-    def validate_description(self, value):
-        validate_youtube_link(value)
-        return value
 
-
-class CourseSerializer(serializers.ModelSerializer):
+class CourseCreateSerializer(serializers.ModelSerializer):
     lesson_count = serializers.SerializerMethodField()
-    lessons = LessonSerializer(many=True, read_only=True)
+    lessons = LessonCreateSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
         fields = '__all__'
         read_only_fields = ['owner']
+        validators = [
+            YoutubeLinkValidator(field='description')
+        ]
 
     def get_lesson_count(self, obj):
         return obj.lessons.count()
-
-    def validate_description(self, value):
-        validate_youtube_link(value)
-        return value
-
