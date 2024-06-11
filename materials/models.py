@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from materials.validators import validate_youtube_link
+
 User = get_user_model()
 
 
