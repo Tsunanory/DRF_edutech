@@ -6,14 +6,13 @@ from materials.models import Course, Lesson, Subscription
 User = get_user_model()
 
 
-class LessonsAndSubscriptionsTests(APITestCase):
+class LessonTests(APITestCase):
 
     def setUp(self):
         self.client = APIClient()
 
-        self.user = User.objects.create_user(username='user', password='password')
-        self.moderator = User.objects.create_user(username='moderator', password='password', is_staff=True)
-        self.owner = User.objects.create_user(username='owner', password='password')
+        self.user = User.objects.create_user(email='user@example.com', password='password')
+        self.owner = User.objects.create_user(email='owner@example.com', password='password')
 
         self.course = Course.objects.create(name='Test Course', owner=self.owner)
 
@@ -58,6 +57,17 @@ class LessonsAndSubscriptionsTests(APITestCase):
         response = self.client.delete(f'/lesson/delete/{self.lesson.id}/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Lesson.objects.filter(id=self.lesson.id).exists())
+
+
+class SubscriptionTests(APITestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+
+        self.user = User.objects.create_user(email='user@example.com', password='password')
+        self.owner = User.objects.create_user(email='owner@example.com', password='password')
+
+        self.course = Course.objects.create(name='Test Course', owner=self.owner)
 
     def test_manage_subscription_add(self):
         self.client.force_authenticate(user=self.user)

@@ -3,8 +3,8 @@ from django.urls import path
 from materials.apps import MaterialsConfig
 from rest_framework.routers import DefaultRouter
 from materials.views import LessonListCreateAPIView, LessonRetrieveUpdateDestroyAPIView, ManageSubscriptionView, \
-    CourseListView
-from users.views import CourseViewSet
+    CourseListView, CourseViewSet
+
 
 app_name = MaterialsConfig.name
 
