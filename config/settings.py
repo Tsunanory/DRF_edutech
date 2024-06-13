@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rest_framework_simplejwt',
+    'drf_yasg',
     
     'users',
     'materials',
@@ -149,3 +150,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+# settings.py
+
+STRIPE_SECRET_KEY = 'sk_test_51PRBXaFAr1MJ3erGEuONZCRiz2TgcfMrFA6T4kzvKSfU9jV0VOSTognAcj9an9jGnWtD4ZlkTjZjOg45r6hNlerI00duj0nihg'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51PRBXaFAr1MJ3erGAZbaUwFEsbHJgbsMpEipSuu240Q56qj13p2ml7rHUvHlZbxBKPAo8YoXMrQrVGkYmmlAmlle00mvBGyrcj'

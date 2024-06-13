@@ -32,37 +32,58 @@ class CourseViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
-class LessonListCreateAPIView(generics.ListCreateAPIView):
+class LessonListAPIView(generics.ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     pagination_class = ListPagination
+    permission_classes = [IsAuthenticated]
+
+
+class LessonCreateAPIView(generics.CreateAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
         if self.request.method == 'POST':
             self.permission_classes = [IsAuthenticated, NotModerator]
         else:
-            self.permission_classes = [IsAuthenticated, IsOwnerOrModerator]
+            self.permission_classes = [IsAuthenticated]
         return [permission() for permission in self.permission_classes]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
 
-class LessonRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class LessonRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class LessonUpdateAPIView(generics.UpdateAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
         if self.request.method in ['PUT', 'PATCH']:
-            self.permission_classes = [IsAuthenticated, IsOwner]
-        elif self.request.method == 'DELETE':
-            self.permission_classes = [IsAuthenticated, IsOwner]
-        else:
             self.permission_classes = [IsAuthenticated, IsOwnerOrModerator]
         return [permission() for permission in self.permission_classes]
 
     def perform_update(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class LessonDestroyAPIView(generics.DestroyAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == 'DELETE':
+            self.permission_classes = [IsAuthenticated, IsOwnerOrModerator]
+        return [permission() for permission in self.permission_classes]
 
 
 class ManageSubscriptionView(APIView):
