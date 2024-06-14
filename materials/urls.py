@@ -1,9 +1,6 @@
 from django.urls import path
-
-from config.yasg import schema_view
 from materials.apps import MaterialsConfig
 from rest_framework.routers import DefaultRouter
-
 from materials.stripe_views import StripeCreateProductView, StripeCreatePriceView, StripeCreateCheckoutSessionView
 from materials.views import ManageSubscriptionView, LessonListAPIView, LessonCreateAPIView, LessonRetrieveAPIView, \
     LessonUpdateAPIView, CourseListView, CourseViewSet, LessonDestroyAPIView
@@ -22,9 +19,6 @@ urlpatterns = [
 
     path('manage-subscription/', ManageSubscriptionView.as_view(), name='manage-subscription'),
     path('courses/', CourseListView.as_view(), name='course-list'),
-
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     path('create-product/', StripeCreateProductView.as_view(), name='create-product'),
     path('create-price/', StripeCreatePriceView.as_view(), name='create-price'),
