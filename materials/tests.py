@@ -11,8 +11,8 @@ class LessonTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.user = User.objects.create_user(email='user@example.com', password='password')
-        self.owner = User.objects.create_user(email='owner@example.com', password='password')
+        self.user = User.objects.create(email='user@example.com', password='password')
+        self.owner = User.objects.create(email='owner@example.com', password='password')
 
         self.course = Course.objects.create(name='Test Course', owner=self.owner)
 
@@ -36,7 +36,7 @@ class LessonTests(APITestCase):
 
     def test_retrieve_lesson(self):
         self.client.force_authenticate(user=self.user)
-        response = self.client.get(f'/lesson/{self.lesson.id}')
+        response = self.client.get(f'/lesson/{self.lesson.id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], self.lesson.name)
 
@@ -64,8 +64,8 @@ class SubscriptionTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.user = User.objects.create_user(email='user@example.com', password='password')
-        self.owner = User.objects.create_user(email='owner@example.com', password='password')
+        self.user = User.objects.create(email='user@example.com', password='password')
+        self.owner = User.objects.create(email='owner@example.com', password='password')
 
         self.course = Course.objects.create(name='Test Course', owner=self.owner)
 
