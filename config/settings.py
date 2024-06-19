@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -155,3 +157,36 @@ REST_FRAMEWORK = {
 
 STRIPE_SECRET_KEY = 'sk_test_51PRBXaFAr1MJ3erGEuONZCRiz2TgcfMrFA6T4kzvKSfU9jV0VOSTognAcj9an9jGnWtD4ZlkTjZjOg45r6hNlerI00duj0nihg'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51PRBXaFAr1MJ3erGAZbaUwFEsbHJgbsMpEipSuu240Q56qj13p2ml7rHUvHlZbxBKPAo8YoXMrQrVGkYmmlAmlle00mvBGyrcj'
+
+
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+# Celery Beat Settings
+CELERY_BEAT_SCHEDULE = {
+    'task-name': {
+        'task': 'materials.tasks.task_function_name',
+        'schedule': crontab(minute=0, hour=0),
+    },
+}
+
+REDIS_URL= "redis://localhost:6379/0"
+
+# myproject/settings.py
+
+
+EMAIL_HOST="smtp.yandex.ru"
+EMAIL_PORT=465
+EMAIL_USE_TLS=False
+EMAIL_USE_SSL=True
+EMAIL_HOST_USER="tsunanori@yandex.ru"
+EMAIL_HOST_PASSWORD="mdduwavtcdjjskyv"
+
+
+
+
+

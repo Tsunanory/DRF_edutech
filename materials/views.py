@@ -3,7 +3,7 @@ from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from .tasks import send_course_update_email
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import ListPagination
 from materials.permissions import NotModerator, IsOwnerOrModerator, IsOwner
@@ -30,6 +30,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(owner=self.request.user)
+        send_course_update_email.delay(Course.id, Course.name)
 
 
 class LessonListAPIView(generics.ListAPIView):
