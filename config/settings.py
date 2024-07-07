@@ -17,18 +17,14 @@ from celery.schedules import crontab
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-y@3#j=qk9_4=-miqfy1%43kgh1_8zefg0e*ato3)@me#h1_q6y'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ('0.0.0.0', )
 
 # Application definition
 
@@ -44,7 +40,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt',
     'drf_yasg',
-    
+
     'users',
     'materials',
 
@@ -80,16 +76,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'drf1',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
+        'NAME': os.getenv('POSTGRES_DB', 'drf1'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
+        'HOST': os.getenv('POSTGRES_HOST', 'db'),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }
 
@@ -112,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -123,7 +119,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -158,13 +153,14 @@ REST_FRAMEWORK = {
 STRIPE_SECRET_KEY = 'sk_test_51PRBXaFAr1MJ3erGEuONZCRiz2TgcfMrFA6T4kzvKSfU9jV0VOSTognAcj9an9jGnWtD4ZlkTjZjOg45r6hNlerI00duj0nihg'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51PRBXaFAr1MJ3erGAZbaUwFEsbHJgbsMpEipSuu240Q56qj13p2ml7rHUvHlZbxBKPAo8YoXMrQrVGkYmmlAmlle00mvBGyrcj'
 
-
-CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
+CELERY_TIMEZONE = 'Europe/Berlin'
+
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 # Celery Beat Settings
 CELERY_BEAT_SCHEDULE = {
@@ -174,19 +170,14 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-REDIS_URL= "redis://localhost:6379/0"
+REDIS_URL = "redis://localhost:6379/0"
 
 # myproject/settings.py
 
 
-EMAIL_HOST="smtp.yandex.ru"
-EMAIL_PORT=465
-EMAIL_USE_TLS=False
-EMAIL_USE_SSL=True
-EMAIL_HOST_USER="tsunanori@yandex.ru"
-EMAIL_HOST_PASSWORD="mdduwavtcdjjskyv"
-
-
-
-
-
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = "tsunanori@yandex.ru"
+EMAIL_HOST_PASSWORD = "mdduwavtcdjjskyv"
